@@ -13,7 +13,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['tambah_pertunjukan'])) {
         $judul = clean_input($_POST['judul']);
         $deskripsi = clean_input($_POST['deskripsi']);
-        $durasi = (int)$_POST['durasi'];
+
+        // Konversi jam & menit ke total menit
+        $jam = (int)$_POST['jam'];
+        $menit = (int)$_POST['menit'];
+        // Validasi input
+        if ($menit > 59) {
+            $_SESSION['error'] = "Menit tidak boleh lebih dari 59";
+            header("Location: admin_manage.php");
+            exit();
+        }
+        $durasi = ($jam * 60) + $menit;
+
         $gambar = 'default-show.png';
     
         // Handle file upload - REMOVE THE DUPLICATE BLOCK
@@ -42,12 +53,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
         try {
-            $stmt = $conn->prepare("INSERT INTO pertunjukan (judul, deskripsi, durasi, gambar) VALUES (?, ?, ?, ?)");
-            $stmt->execute([$judul, $deskripsi, $durasi, $gambar]);
-            $_SESSION['success'] = "Pertunjukan berhasil ditambahkan!";
+        $stmt = $conn->prepare("INSERT INTO pertunjukan (judul, deskripsi, durasi, gambar) VALUES (?, ?, ?, ?)");
+        $stmt->execute([$judul, $deskripsi, $durasi, $gambar]);
+        $_SESSION['success'] = "Pertunjukan berhasil ditambahkan!";
         } catch (PDOException $e) {
             $_SESSION['error'] = "Gagal menambah pertunjukan: ".$e->getMessage();
         }
+        
+        header("Location: admin_manage.php");
+        exit();
     }
     
     // Tambah Jadwal
@@ -127,22 +141,30 @@ $jadwals = $conn->query("
         <!-- Form Tambah Pertunjukan -->
         <form method="POST" enctype="multipart/form-data" class="form-card">
             <h2>Tambah Pertunjukan Baru</h2>
+            
             <div class="form-group">
                 <label for="judul">Judul:</label>
                 <input type="text" id="judul" name="judul" required>
             </div>
+            
             <div class="form-group">
                 <label for="deskripsi">Deskripsi:</label>
                 <textarea id="deskripsi" name="deskripsi" rows="3"></textarea>
             </div>
+            
             <div class="form-group">
-                <label for="durasi">Durasi (menit):</label>
-                <input type="number" id="durasi" name="durasi" min="1" required>
+                <label>Durasi:</label>
+                <div class="duration-input">
+                    <input type="number" name="jam" min="0" max="10" placeholder="jam" required><br><br>
+                    <input type="number" name="menit" min="0" max="59" placeholder="menit" required>
+                </div>
             </div>
+            
             <div class="form-group">
                 <label for="gambar">Poster:</label>
                 <input type="file" id="gambar" name="gambar" accept="image/*">
             </div>
+            
             <button type="submit" name="tambah_pertunjukan" class="btn">Simpan Pertunjukan</button>
         </form>
 

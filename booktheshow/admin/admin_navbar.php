@@ -1,11 +1,10 @@
 <nav>
     <div class="logo"><span>BookTheShow</span></div>
-    <div class="nav-right">
-        <span class="admin-welcome">Halo, <?= htmlspecialchars($_SESSION['username'] ?? 'Admin') ?></span>
+    <div class="nav-admin">
+    <div class="admin-profile">
         <a href="admin_dashboard.php">Dashboard</a>
         <a href="admin_manage.php">Kelola Data</a>
-        <a href="logout.php" class="logout-btn">Logout</a>
-    </div>
+        <span class="admin-avatar"><?= strtoupper(substr(($_SESSION['username'] ?? 'A'), 0, 1)) ?></span>
+        <a href="/booktheshow/admin/logout.php" class="logout-btn">Logout</a>
+    </class=>
 </nav>
-
-

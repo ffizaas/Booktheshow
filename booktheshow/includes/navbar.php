@@ -16,7 +16,10 @@ $current_page = basename($_SERVER['PHP_SELF']);
     
     <div class="nav-admin">
         <?php if(isset($_SESSION['admin']) && $_SESSION['admin'] === true): ?>
-            <a href="../admin/admin_dashboard.php" class="admin-link">Admin Dashboard</a>
+            <a href="../admin/admin_dashboard.php">Admin Dashboard</a>
+            <a href="../admin/logout.php" class="logout-btn">Logout</a>
+            
+        <?php elseif (isset($_SESSION['user'])): ?>
             <a href="../admin/logout.php" class="logout-btn">Logout</a>
         <?php endif; ?>
     </div>

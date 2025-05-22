@@ -13,7 +13,15 @@ require_once __DIR__ . '/../includes/koneksi.php';
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
 </head>
 <body>
-    <?php include '../includes/navbar.php'; ?>
+    <?php
+    session_start();
+
+    if (isset($_SESSION['admin'])) {
+        include '../admin/admin_navbar.php'; // Navbar admin
+    } else {
+        include '../includes/navbar.php'; // Navbar pengguna biasa
+    }
+    ?>
 
     <div class="container">
         <h1>Tentang BookTheShow</h1>
@@ -26,7 +34,6 @@ require_once __DIR__ . '/../includes/koneksi.php';
                 <li>Pemesanan tiket secara langsung untuk pertunjukan teater</li>
                 <li>Melihat jadwal pertunjukan yang tersedia</li>
                 <li>Antarmuka yang mudah digunakan</li>
-                <li>Sistem manajemen untuk administrator</li>
             </ul>
             
             <h2>Tim Pengembang:</h2>

@@ -11,11 +11,15 @@ require_once '../includes/koneksi.php';
 try {
     $pertunjukan_count = $conn->query("SELECT COUNT(*) FROM pertunjukan")->fetchColumn();
     $jadwal_count = $conn->query("SELECT COUNT(*) FROM jadwal")->fetchColumn();
-    $pemesanan_count = $conn->query("SELECT COUNT(*) FROM pemesanan")->fetchColumn();
+    $pemesanan_count = $conn->query("SELECT SUM(jumlah_tiket) FROM pemesanan")->fetchColumn();
+    if ($pemesanan_count === null) {
+        $pemesanan_count = 0;
+    }
 } catch (PDOException $e) {
     die("Error: " . $e->getMessage());
 }
 ?>
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -44,7 +48,9 @@ try {
             
             <div class="stat-card">
                 <h3>Total Pemesanan</h3>
-                <p><?= $pemesanan_count ?></p>
+                <a href="riwayat_pemesanan.php">
+                    <p> <?= $pemesanan_count ?></p>
+                </a>
             </div>
         </div>
     </div>
